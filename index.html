@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pooks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .book-info {
+            padding: 1rem;
+        }
+
+        .book-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .book-author {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 2rem;
+            color: #e74c3c;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pooks</h1>
+        <p>Read Some Poopbooks</p>
+    </header>
+
+    <div class="container">
+        <div id="loading" class="loading">正在加载图书列表...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div id="bookGrid" class="book-grid" style="display: none;"></div>
+    </div>
+
+    <footer>
+        <p>© 2026 Pooks</p>
+    </footer>
+
+    <!-- 引入EPUB.js库 -->
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+    <script>
+        // 图书数据
+        let books = [];
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', init);
+
+        async function init() {
+            try {
+                // 加载图书清单
+                await loadBooks();
+                
+                // 渲染图书列表
+                renderBookGrid();
+                
+                // 隐藏加载状态，显示图书网格
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('bookGrid').style.display = 'grid';
+            } catch (error) {
+                console.error('加载图书失败:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = `加载失败: ${error.message}`;
+            }
+        }
+
+        // 加载图书清单
+        async function loadBooks() {
+            const response = await fetch('books.json');
+            if (!response.ok) {
+                throw new Error('无法加载图书清单文件');
+            }
+            books = await response.json();
+        }
+
+        // 渲染图书网格
+        function renderBookGrid() {
+            const bookGrid = document.getElementById('bookGrid');
+            bookGrid.innerHTML = '';
+
+            if (books.length === 0) {
+                bookGrid.innerHTML = '<div class="loading">暂无EPUB图书</div>';
+                return;
+            }
+
+            books.forEach(book => {
+                const bookCard = createBookCard(book);
+                bookGrid.appendChild(bookCard);
+            });
+        }
+
+        // 创建图书卡片
+        function createBookCard(book) {
+            const card = document.createElement('div');
+            card.className = 'book-card';
+            
+            // 点击卡片跳转到阅读页面
+            card.addEventListener('click', () => {
+                window.open(`reader.html?file=${encodeURIComponent(book.file)}&title=${encodeURIComponent(book.title)}`, '_blank');
+            });
+
+            // 封面图片
+            const coverImg = document.createElement('img');
+            coverImg.className = 'book-cover';
+            coverImg.src = book.cover || 'assets/cover-placeholder.jpg';
+            coverImg.alt = book.title;
+            
+            // 加载封面（从EPUB文件中提取）
+            loadBookCover(book.file, coverImg);
+
+            // 图书信息
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'book-info';
+
+            const title = document.createElement('div');
+            title.className = 'book-title';
+            title.textContent = book.title;
+
+            const author = document.createElement('div');
+            author.className = 'book-author';
+            author.textContent = book.author || '未知作者';
+
+            infoDiv.appendChild(title);
+            infoDiv.appendChild(author);
+            card.appendChild(coverImg);
+            card.appendChild(infoDiv);
+
+            return card;
+        }
+
+        // 从EPUB文件加载封面
+        async function loadBookCover(epubFile, imgElement) {
+            try {
+                const book = ePub(epubFile);
+                const rendition = book.renderTo("temp", { width: 300, height: 400 });
+                
+                // 等待书籍加载
+                await book.ready;
+                
+                // 获取封面
+                const coverUrl = await book.coverUrl();
+                if (coverUrl) {
+                    imgElement.src = coverUrl;
+                }
+                
+                // 清理临时渲染
+                rendition.destroy();
+            } catch (error) {
+                console.warn(`无法加载 ${epubFile} 的封面:`, error);
+                // 使用占位图
+                imgElement.src = 'assets/cover-placeholder.jpg';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPUB阅读器 - Pooks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70%;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .reader-container {
+            position: absolute;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        #viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #666;
+        }
+
+        .error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #e74c3c;
+            padding: 2rem;
+            max-width: 80%;
+        }
+
+        /* 阅读控制样式 */
+        .read-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            display: flex;
+            gap: 1.5rem;
+            z-index: 90;
+        }
+
+        .read-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .read-btn:hover {
+            color: #3498db;
+        }
+
+        .toc-panel {
+            position: fixed;
+            top: 70px;
+            right: 0;
+            width: 300px;
+            height: calc(100% - 70px);
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            z-index: 80;
+            padding: 1rem;
+        }
+
+        .toc-panel.show {
+            transform: translateX(0);
+        }
+
+        .toc-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid transparent;
+        }
+
+        .toc-item a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+
+        .toc-item a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .toc-item.active {
+            border-left-color: #3498db;
+        }
+
+        .toc-item.active a {
+            color: #3498db;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="book-title" id="bookTitle">EPUB阅读器</div>
+        <div class="controls">
+            <button class="btn" id="tocBtn">目录</button>
+            <button class="btn" id="fontSizeBtn">字体大小</button>
+            <button class="btn" onclick="window.close()">关闭</button>
+        </div>
+    </header>
+
+    <div class="reader-container">
+        <div id="loading" class="loading">正在加载电子书...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div id="viewer"></div>
+    </div>
+
+    <!-- 阅读控制按钮 -->
+    <div class="read-controls">
+        <button class="read-btn" id="prevBtn">←</button>
+        <button class="read-btn" id="nextBtn">→</button>
+    </div>
+
+    <!-- 目录面板 -->
+    <div class="toc-panel" id="tocPanel">
+        <div class="toc-title">目录</div>
+        <ul class="toc-list" id="tocList"></ul>
+    </div>
+
+    <!-- 引入EPUB.js库 -->
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+    <script>
+        let book;
+        let rendition;
+        let currentLocation;
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initReader);
+
+        async function initReader() {
+            try {
+                // 获取URL参数中的文件路径
+                const params = new URLSearchParams(window.location.search);
+                const epubFile = params.get('file');
+                const bookTitle = params.get('title') || '未知图书';
+
+                if (!epubFile) {
+                    throw new Error('未指定EPUB文件');
+                }
+
+                // 设置页面标题
+                document.getElementById('bookTitle').textContent = bookTitle;
+
+                // 初始化EPUB阅读器
+                await loadEpubBook(epubFile);
+                
+                // 隐藏加载状态
+                document.getElementById('loading').style.display = 'none';
+                
+                // 绑定控制按钮事件
+                bindControls();
+                
+            } catch (error) {
+                console.error('阅读器初始化失败:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = `加载失败: ${error.message}`;
+            }
+        }
+
+        // 加载EPUB图书
+        async function loadEpubBook(filePath) {
+            // 创建EPUB实例
+            book = ePub(filePath);
+            
+            // 等待书籍加载完成
+            await book.ready;
+            
+            // 渲染书籍到页面
+            rendition = book.renderTo("viewer", {
+                width: "100%",
+                height: "100%",
+                flow: "paginated", // 分页模式
+                manager: "continuous", // 连续滚动
+                spreads: "auto" // 自动处理双页
+            });
+
+            // 获取目录
+            const toc = await book.toc;
+            renderToc(toc);
+
+            // 开始阅读
+            await rendition.display();
+            
+            // 监听位置变化
+            rendition.on("locationChanged", (location) => {
+                currentLocation = location;
+                updateActiveTocItem(location);
+            });
+        }
+
+        // 渲染目录
+        function renderToc(toc) {
+            const tocList = document.getElementById('tocList');
+            tocList.innerHTML = '';
+
+            // 递归渲染目录项
+            function renderTocItems(items, parentElement, depth = 0) {
+                items.forEach(item => {
+                    if (item.href) {
+                        const li = document.createElement('li');
+                        li.className = 'toc-item';
+                        li.style.paddingLeft = `${depth * 15}px`;
+                        
+                        const a = document.createElement('a');
+                        a.href = '#';
+                        a.textContent = item.label;
+                        a.dataset.href = item.href;
+                        
+                        a.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            rendition.display(item.href);
+                            // 关闭目录面板
+                            document.getElementById('tocPanel').classList.remove('show');
+                        });
+                        
+                        li.appendChild(a);
+                        parentElement.appendChild(li);
+                    }
+                    
+                    // 递归渲染子目录
+                    if (item.subitems && item.subitems.length > 0) {
+                        renderTocItems(item.subitems, parentElement, depth + 1);
+                    }
+                });
+            }
+
+            renderTocItems(toc, tocList);
+        }
+
+        // 更新当前激活的目录项
+        function updateActiveTocItem(location) {
+            const tocItems = document.querySelectorAll('.toc-item');
+            tocItems.forEach(item => item.classList.remove('active'));
+            
+            // 简单匹配，找到对应的目录项
+            const path = location.start.href;
+            const activeItem = document.querySelector(`.toc-item a[data-href="${path}"]`);
+            if (activeItem) {
+                activeItem.closest('.toc-item').classList.add('active');
+            }
+        }
+
+        // 绑定控制按钮事件
+        function bindControls() {
+            // 上一页/下一页
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                rendition.prev();
+            });
+            
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                rendition.next();
+            });
+            
+            // 目录按钮
+            document.getElementById('tocBtn').addEventListener('click', () => {
+                document.getElementById('tocPanel').classList.toggle('show');
+            });
+            
+            // 字体大小按钮
+            document.getElementById('fontSizeBtn').addEventListener('click', () => {
+                // 切换字体大小
+                const view = rendition.views()[0];
+                const currentSize = view.getFontSize();
+                const newSize = currentSize < 100 ? currentSize + 10 : 80;
+                view.setFontSize(newSize);
+            });
+            
+            // 键盘导航
+            document.addEventListener('keydown', (e) => {
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        rendition.prev();
+                        break;
+                    case 'ArrowRight':
+                        rendition.next();
+                        break;
+                    case 'Escape':
+                        document.getElementById('tocPanel').classList.remove('show');
+                        break;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

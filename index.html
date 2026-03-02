@@ -58,6 +58,9 @@
             height: 280px;
             object-fit: cover;
             background-color: #eee;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="%23cccccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
         }
 
         .book-info {
@@ -111,14 +114,17 @@
     </div>
 
     <footer>
-        <p>© 2026 Pooks</p>
+        <p>© 2026 Pooks | 使用 EPUB.js & JSZip 构建</p>
     </footer>
 
-    <!-- 引入EPUB.js库 -->
+    <!-- 引入必要的库 -->
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
     <script>
         // 图书数据
         let books = [];
+        // 缓存封面图片，避免重复加载
+        const coverCache = new Map();
 
         // 初始化页面
         document.addEventListener('DOMContentLoaded', init);
@@ -146,9 +152,14 @@
         async function loadBooks() {
             const response = await fetch('books.json');
             if (!response.ok) {
-                throw new Error('无法加载图书清单文件');
+                throw new Error('无法加载图书清单文件，请检查books.json是否存在');
             }
             books = await response.json();
+            
+            // 验证图书数据格式
+            if (!Array.isArray(books)) {
+                throw new Error('books.json格式错误，应该是一个数组');
+            }
         }
 
         // 渲染图书网格
@@ -172,19 +183,32 @@
             const card = document.createElement('div');
             card.className = 'book-card';
             
+            // 验证图书数据
+            if (!book.file) {
+                console.warn('图书缺少文件路径:', book);
+                return card;
+            }
+            
             // 点击卡片跳转到阅读页面
             card.addEventListener('click', () => {
-                window.open(`reader.html?file=${encodeURIComponent(book.file)}&title=${encodeURIComponent(book.title)}`, '_blank');
+                window.open(`reader.html?file=${encodeURIComponent(book.file)}&title=${encodeURIComponent(book.title || '未知图书')}`, '_blank');
             });
 
             // 封面图片
             const coverImg = document.createElement('img');
             coverImg.className = 'book-cover';
-            coverImg.src = book.cover || 'assets/cover-placeholder.jpg';
-            coverImg.alt = book.title;
+            coverImg.alt = book.title || '图书封面';
             
-            // 加载封面（从EPUB文件中提取）
-            loadBookCover(book.file, coverImg);
+            // 优先使用缓存的封面
+            if (coverCache.has(book.file)) {
+                coverImg.src = coverCache.get(book.file);
+            } else if (book.cover && book.cover.trim()) {
+                coverImg.src = book.cover;
+                coverCache.set(book.file, book.cover);
+            } else {
+                // 加载封面（从EPUB文件中提取）
+                loadBookCover(book.file, coverImg);
+            }
 
             // 图书信息
             const infoDiv = document.createElement('div');
@@ -192,7 +216,7 @@
 
             const title = document.createElement('div');
             title.className = 'book-title';
-            title.textContent = book.title;
+            title.textContent = book.title || '未知标题';
 
             const author = document.createElement('div');
             author.className = 'book-author';
@@ -206,11 +230,17 @@
             return card;
         }
 
-        // 从EPUB文件加载封面
+        // 从EPUB文件加载封面（使用JSZip优化）
         async function loadBookCover(epubFile, imgElement) {
             try {
+                // 如果已经缓存，直接使用
+                if (coverCache.has(epubFile)) {
+                    imgElement.src = coverCache.get(epubFile);
+                    return;
+                }
+
+                // 方式1：优先使用epubjs加载
                 const book = ePub(epubFile);
-                const rendition = book.renderTo("temp", { width: 300, height: 400 });
                 
                 // 等待书籍加载
                 await book.ready;
@@ -219,15 +249,95 @@
                 const coverUrl = await book.coverUrl();
                 if (coverUrl) {
                     imgElement.src = coverUrl;
+                    coverCache.set(epubFile, coverUrl);
+                    return;
                 }
                 
-                // 清理临时渲染
-                rendition.destroy();
             } catch (error) {
-                console.warn(`无法加载 ${epubFile} 的封面:`, error);
-                // 使用占位图
-                imgElement.src = 'assets/cover-placeholder.jpg';
+                console.warn(`使用epubjs加载 ${epubFile} 封面失败，尝试使用JSZip方式:`, error);
+                
+                try {
+                    // 方式2：使用JSZip手动加载封面
+                    await loadCoverWithJSZip(epubFile, imgElement);
+                } catch (zipError) {
+                    console.error(`JSZip加载封面失败:`, zipError);
+                    // 使用默认占位图
+                    imgElement.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="280" viewBox="0 0 200 280" fill="%23f0f0f0"><rect width="200" height="280" fill="%23f0f0f0"/><path d="M40 190A25 25 0 0 1 65 165H180V20H65A25 25 0 0 1 40 45v145z" fill="%23e0e0e0"/><text x="100" y="140" font-family="Arial" font-size="16" text-anchor="middle" fill="%23999">${encodeURIComponent(imgElement.alt || '封面')}</text></svg>`;
+                }
             }
+        }
+
+        // 使用JSZip手动提取EPUB封面
+        async function loadCoverWithJSZip(epubPath, imgElement) {
+            // 下载EPUB文件
+            const response = await fetch(epubPath);
+            if (!response.ok) {
+                throw new Error(`无法下载文件: ${response.status}`);
+            }
+            
+            // 读取为ArrayBuffer
+            const arrayBuffer = await response.arrayBuffer();
+            
+            // 使用JSZip解压
+            const zip = await JSZip.loadAsync(arrayBuffer);
+            
+            // 查找container.xml
+            const containerXml = await zip.file('META-INF/container.xml').async('string');
+            
+            // 解析找到opf文件路径
+            const opfMatch = containerXml.match(/full-path="([^"]+)"/);
+            if (!opfMatch) {
+                throw new Error('无法找到OPF文件路径');
+            }
+            
+            const opfPath = opfMatch[1];
+            const opfDir = opfPath.substring(0, opfPath.lastIndexOf('/') + 1);
+            
+            // 读取opf文件
+            const opfContent = await zip.file(opfPath).async('string');
+            
+            // 查找封面图片路径
+            let coverPath = null;
+            
+            // 方式1：查找meta标签中的封面
+            const coverMetaMatch = opfContent.match(/<meta[^>]+name="cover"[^>]+content="([^"]+)"/);
+            if (coverMetaMatch) {
+                const coverId = coverMetaMatch[1];
+                const coverItemMatch = opfContent.match(new RegExp(`<item[^>]+id="${coverId}"[^>]+href="([^"]+)"`));
+                if (coverItemMatch) {
+                    coverPath = opfDir + coverItemMatch[1];
+                }
+            }
+            
+            // 方式2：直接查找图片文件
+            if (!coverPath) {
+                const imageItems = opfContent.match(/<item[^>]+media-type="image\/[^"]+"[^>]+href="([^"]+)"[^>]*>/g);
+                if (imageItems && imageItems.length > 0) {
+                    const firstImageMatch = imageItems[0].match(/href="([^"]+)"/);
+                    if (firstImageMatch) {
+                        coverPath = opfDir + firstImageMatch[1];
+                    }
+                }
+            }
+            
+            if (!coverPath) {
+                throw new Error('未找到封面图片');
+            }
+            
+            // 获取封面图片
+            const coverFile = zip.file(coverPath);
+            if (!coverFile) {
+                throw new Error(`封面文件不存在: ${coverPath}`);
+            }
+            
+            // 转换为DataURL
+            const coverData = await coverFile.async('base64');
+            const mimeType = coverFile.name.match(/\.(\w+)$/);
+            const dataUrl = `data:image/${mimeType ? mimeType[1] : 'jpeg'};base64,${coverData}`;
+            
+            // 设置图片并缓存
+            imgElement.src = dataUrl;
+            coverCache.set(epubPath, dataUrl);
         }
     </script>
 </body>

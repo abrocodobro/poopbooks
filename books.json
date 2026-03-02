@@ -2,8 +2,505 @@
     {
         "id": "1",
         "title": "Welcome to Dead House",
-        "author": "Stein",
-        "file": "books/demo.epub",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 01] -  Welcome to Dead House (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "2",
+        "title": "Stay Out of the Basement",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 02] - Stay Out of the Basement (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "3",
+        "title": "Monster Blood",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 03] - Monster Blood (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "4",
+        "title": "Say Cheese and Die!",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 04] - Say Cheese and Die! (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "5",
+        "title": "The Curse of the Mummy's Tomb",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 05] - The Curse of the Mummy's Tomb (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "6",
+        "title": "Let's Get Invisible! ",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 06] - Let's Get Invisible! (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "7",
+        "title": "Night of the Living Dummy",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 07] - Night of the Living Dummy (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "8",
+        "title": "The Girl Who Cried Monster",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 08] - The Girl Who Cried Monster (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "9",
+        "title": "Welcome to Camp Nightmare",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 09] - Welcome to Camp Nightmare (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "10",
+        "title": "The Ghost Next Door",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 10] - The Ghost Next Door (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "11",
+        "title": "The Haunted Mask",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 11] - The Haunted Mask (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "12",
+        "title": "Be Careful What You Wish For...",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 12] - Be Careful What You Wish For... (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "13",
+        "title": "Piano Lessons Can Be Murder",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 13] - Piano Lessons Can Be Murder (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "14",
+        "title": "The Werewolf of Fever Swamp",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 14] - The Werewolf of Fever Swamp (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "15",
+        "title": "You Can't Scare Me!",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 15] - You Can't Scare Me! (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "16",
+        "title": "One Day At Horrorland",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 16] - One Day At Horrorland (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "17",
+        "title": "Why I'm Afraid of Bees",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 17] - Why I'm Afraid of Bees (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "18",
+        "title": "Monster Blood II",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 18] - Monster Blood II (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "19",
+        "title": "Deep Trouble",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 19] - Deep Trouble (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "20",
+        "title": "The Scarecrow Walks at Midnight",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 20] - The Scarecrow Walks at Midnight (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "21",
+        "title": "Go Eat Worms!",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 21] - Go Eat Worms! (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "22",
+        "title": "Ghost Beach",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 22] - Ghost Beach (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "23",
+        "title": "Return of the Mummy",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 23] - Return of the Mummy (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "24",
+        "title": "Phantom of the Auditorium",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 24] - Phantom of the Auditorium (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "25",
+        "title": "Attack of the Mutant",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 25] - Attack of the Mutant (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "26",
+        "title": "My Hairiest Adventure",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 26] - My Hairiest Adventure (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "27",
+        "title": "A Night in Terror Tower",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 27] - A Night in Terror Tower (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "28",
+        "title": "The Cuckoo Clock of Doom",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 28] - The Cuckoo Clock of Doom (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "29",
+        "title": "Monster Blood III",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 29] - Monster Blood III (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "30",
+        "title": "It Came from Beneath the Sink",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 30] - It Came from Beneath the Sink (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "31",
+        "title": "Night of the Living Dummy II",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 31] - Night of the Living Dummy II (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "32",
+        "title": "The Barking Ghost",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 32] - The Barking Ghost (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "33",
+        "title": "The Horror at Camp Jellyjam",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 33] - The Horror at Camp Jellyjam (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "34",
+        "title": "Revenge of the Lawn Gnomes",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 34] - Revenge of the Lawn Gnomes (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "35",
+        "title": "A Shocker on Shock Street",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 35] - A Shocker on Shock Street (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "36",
+        "title": "The Haunted Mask II",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 36] - The Haunted Mask II (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "37",
+        "title": "The Headless Ghost",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 37] - The Headless Ghost (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "38",
+        "title": "The Abominable Snowman of Pasadena",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 38] - The Abominable Snowman of Pasadena (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "39",
+        "title": "How I Got My Shrunken Head",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 39] - How I Got My Shrunken Head (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "40",
+        "title": "Night of the Living Dummy III",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 40] - Night of the Living Dummy III (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "41",
+        "title": "Bad Hare Day",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 41] - Bad Hare Day (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "42",
+        "title": "Egg Monsters from Mars",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 42] - Egg Monsters from Mars (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "43",
+        "title": "The Beast from the East",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 43] - The Beast from the East (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "44",
+        "title": "Say Cheese and Die–Again!",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 44] - Say Cheese and Die! Again! (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "45",
+        "title": "Ghost Camp",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 45] - Ghost Camp (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "46",
+        "title": "How to Kill a Monster",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 46] - How to Kill a Monster (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "47",
+        "title": "Legend of the Lost Legend",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 47] - Legend of the Lost Legend (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "48",
+        "title": "Attack of the Jack-O'-Lanterns",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 48] - Attack of the Jack-O'-Lanterns (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "49",
+        "title": "Vampire Breath",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 49] - Vampire Breath (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "50",
+        "title": "Calling All Creeps!",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 50] - Calling All Creeps! (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "51",
+        "title": "Beware, the Snowman",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 51] - Beware, the Snowman (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "52",
+        "title": "How I Learned to Fly",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 52] - How I Learned to Fly (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "53",
+        "title": "Chicken Chicken",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 53] - Chicken Chicken (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "54",
+        "title": "Don't Go to Sleep",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 54] - Don't Go to Sleep (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "55",
+        "title": "The Blob That Ate Everyone",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 55] - The Blob That Ate Everyone (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "56",
+        "title": "The Curse of Camp Cold Lake",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 56] - The Curse of Camp Cold Lake (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "57",
+        "title": "My Best Friend is Invisible",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 57] - My Best Friend is Invisible (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "58",
+        "title": "Deep Trouble II",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 58] - Deep Trouble II (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "59",
+        "title": "The Haunted School",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 59] - The Haunted School (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "60",
+        "title": "Werewolf Skin",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 60] - Werewolf Skin (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "61",
+        "title": "I Live in Your Basement",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 61] - I Live in Your Basement (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "62",
+        "title": "Monster Blood IV",
+        "author": "R. L. Stine",
+        "file": "books/[Goosebumps 62] - Monster Blood IV (Undead) (v1.5).epub",
+        "cover": ""   
+    },
+    {
+        "id": "63",
+        "title": "格兰特船长的儿女",
+        "author": "儒勒·凡尔纳",
+        "file": "books/1格兰特船长的儿女.epub",
+        "cover": ""   
+    },
+    {
+        "id": "64",
+        "title": "海底两万里",
+        "author": "儒勒·凡尔纳",
+        "file": "books/2海底两万里.epub",
+        "cover": ""   
+    },
+    {
+        "id": "65",
+        "title": "神秘岛",
+        "author": "儒勒·凡尔纳",
+        "file": "books/3神秘岛.epub",
+        "cover": ""   
+    },
+    {
+        "id": "66",
+        "title": "Harry Potter and the Sorcerer's Stone",
+        "author": "J. K. Rowling",
+        "file": "books/Harry Potter 1 - Harry Potter and the So - Rowling_ J.K_.epub",
+        "cover": ""   
+    },
+    {
+        "id": "67",
+        "title": "Harry Potter and the Chamber of Secrets",
+        "author": "J. K. Rowling",
+        "file": "books/Harry Potter 2 - Harry Potter and The Ch - Rowling_ J.K_.epub",
+        "cover": ""   
+    },
+    {
+        "id": "68",
+        "title": "Harry Potter and the Prisoner of Azkaban",
+        "author": "J. K. Rowling",
+        "file": "books/Harry Potter 3 - Harry Potter And The Pr - Rowling_ J.K_.epub",
+        "cover": ""   
+    },
+    {
+        "id": "69",
+        "title": "Harry Potter and the Goblet of Fire",
+        "author": "J. K. Rowling",
+        "file": "books/Harry Potter 4 - Harry Potter and The Go - Rowling_ J.K_.epub",
+        "cover": ""   
+    },
+    {
+        "id": "70",
+        "title": "Harry Potter and the Order of the Phoenix",
+        "author": "J. K. Rowling",
+        "file": "books/Harry Potter 5 - Harry Potter and the Or - Rowling_ J.K_.epub",
+        "cover": ""   
+    },
+    {
+        "id": "71",
+        "title": "Harry Potter and the Half-Blood Prince",
+        "author": "J. K. Rowling",
+        "file": "books/Harry Potter 6 - Harry Potter and the Ha - Rowling_ J.K_.epub",
+        "cover": ""   
+    },
+    {
+        "id": "72",
+        "title": "Harry Potter and the Deathly Hallows",
+        "author": "J. K. Rowling",
+        "file": "books/Harry Potter 7 - Harry Potter and the De - Rowling_ J.K_.epub",
         "cover": ""   
     }
 ]

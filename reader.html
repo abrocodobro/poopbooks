@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EPUB阅读器 - Pooks</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="favicon-180x180.png">
+    <title>EPUB Reader | Pooks</title>
     <style>
         * {
             margin: 0;
@@ -12,64 +15,90 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
             overflow: hidden;
         }
 
+        /* 顶部栏变小 */
         header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem;
+            background-color: #1e1e1e;
+            padding: 0.6rem 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
             position: relative;
             z-index: 100;
         }
 
+        /* 书名加粗显示 */
         .book-title {
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700; /* 加粗，700是标准加粗权重 */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 70%;
+            max-width: 75%;
+            color: #ffffff;
         }
 
         .controls {
             display: flex;
-            gap: 1rem;
+            gap: 0.6rem;
         }
 
         .btn {
-            background-color: #3498db;
-            color: white;
+            background-color: #333;
+            color: #fff;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
+            padding: 0.35rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
         .btn:hover {
-            background-color: #2980b9;
+            background-color: #444;
         }
 
+        /* 阅读区域占满更多空间 */
         .reader-container {
             position: absolute;
-            top: 70px;
+            top: 46px;
             left: 0;
             right: 0;
-            bottom: 0;
+            bottom: 56px;
             overflow: hidden;
+            background-color: #121212;
         }
 
         #viewer {
             width: 100%;
             height: 100%;
+        }
+
+        #viewer iframe {
+            background-color: #121212 !important;
+        }
+
+        #viewer .epub-view {
+            background-color: #121212 !important;
+            color: #e0e0e0 !important;
+        }
+
+        #viewer .epub-view p {
+            color: #e0e0e0 !important;
+        }
+
+        #viewer .epub-view h1,
+        #viewer .epub-view h2,
+        #viewer .epub-view h3,
+        #viewer .epub-view h4,
+        #viewer .epub-view h5,
+        #viewer .epub-view h6 {
+            color: #ffffff !important;
         }
 
         .loading {
@@ -78,20 +107,19 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            color: #666;
+            color: #999;
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
+            width: 36px;
+            height: 36px;
+            border: 3px solid #333;
+            border-top: 3px solid #8ab4f8;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
         }
 
         @keyframes spin {
@@ -104,54 +132,57 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            text-align: center;
-            color: #e74c3c;
+            color: #ff6b6b;
             padding: 2rem;
-            max-width: 80%;
         }
 
-        /* 阅读控制样式 */
-        .read-controls {
+        /* 底部翻页栏变小 */
+        .bottom-controls {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: #1e1e1e;
             display: flex;
-            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
             z-index: 90;
         }
 
-        .read-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            width: 30px;
-            height: 30px;
+        .read-controls {
             display: flex;
+            gap: 1.2rem;
+        }
+
+        /* 翻页键改成按钮样式 */
+        .read-btn {
+            background-color: #333;
+            color: #e0e0e0;
+            border: none;
+            width: 44px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
         }
 
         .read-btn:hover {
-            color: #3498db;
+            background-color: #444;
         }
 
         .toc-panel {
             position: fixed;
-            top: 70px;
+            top: 46px;
             right: 0;
-            width: 300px;
-            height: calc(100% - 70px);
-            background: white;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            width: 280px;
+            height: calc(100% - 102px);
+            background: #1e1e1e;
             transform: translateX(100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.25s ease;
             overflow-y: auto;
             z-index: 80;
             padding: 1rem;
@@ -162,11 +193,11 @@
         }
 
         .toc-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
             padding-bottom: 0.5rem;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #333;
+            color: #fff;
         }
 
         .toc-list {
@@ -174,86 +205,19 @@
         }
 
         .toc-item {
-            margin-bottom: 0.5rem;
-            padding-left: 0.5rem;
-            border-left: 2px solid transparent;
+            margin-bottom: 0.4rem;
         }
 
         .toc-item a {
-            color: #333;
+            color: #e0e0e0;
             text-decoration: none;
             display: block;
-            padding: 0.5rem;
-            border-radius: 5px;
-            transition: background-color 0.2s ease;
+            padding: 0.4rem 0.5rem;
+            border-radius: 4px;
         }
 
         .toc-item a:hover {
-            background-color: #f0f0f0;
-        }
-
-        .toc-item.active {
-            border-left-color: #3498db;
-        }
-
-        .toc-item.active a {
-            color: #3498db;
-            font-weight: 500;
-        }
-
-        /* 字体大小控制面板 */
-        .font-panel {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            z-index: 200;
-            display: none;
-        }
-
-        .font-panel.show {
-            display: block;
-        }
-
-        .font-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .font-size-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-
-        .font-size-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid #ddd;
-            background: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        .font-size-display {
-            min-width: 60px;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-
-        .font-actions {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
+            background-color: #333;
         }
 
         .overlay {
@@ -262,7 +226,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             z-index: 150;
             display: none;
         }
@@ -273,431 +237,237 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="book-title" id="bookTitle">Pooks</div>
-        <div class="controls">
-            <button class="btn" id="tocBtn">目录</button>
-            <button class="btn" id="fontSizeBtn">字体大小</button>
-            <button class="btn" onclick="window.close()">关闭</button>
-        </div>
-    </header>
 
-    <div class="reader-container">
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <div>正在加载电子书...</div>
-        </div>
-        <div id="error" class="error" style="display: none;"></div>
-        <div id="viewer"></div>
+<header>
+    <div class="book-title" id="bookTitle">EPUB Reader</div>
+    <div class="controls">
+        <button class="btn" id="tocBtn">Content</button>
     </div>
+</header>
 
-    <!-- 阅读控制按钮 -->
+<div class="reader-container">
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <div>Loading...</div>
+    </div>
+    <div id="error" class="error" style="display: none;"></div>
+    <div id="viewer"></div>
+</div>
+
+<div class="bottom-controls">
     <div class="read-controls">
         <button class="read-btn" id="prevBtn">←</button>
         <button class="read-btn" id="nextBtn">→</button>
     </div>
+</div>
 
-    <!-- 目录面板 -->
-    <div class="toc-panel" id="tocPanel">
-        <div class="toc-title">目录</div>
-        <ul class="toc-list" id="tocList"></ul>
-    </div>
+<div class="toc-panel" id="tocPanel">
+    <div class="toc-title">Content</div>
+    <ul class="toc-list" id="tocList"></ul>
+</div>
 
-    <!-- 字体大小面板 -->
-    <div class="font-panel" id="fontPanel">
-        <div class="font-title">调整字体大小</div>
-        <div class="font-size-controls">
-            <button class="font-size-btn" id="fontSmallerBtn">-</button>
-            <div class="font-size-display" id="fontSizeDisplay">100%</div>
-            <button class="font-size-btn" id="fontLargerBtn">+</button>
-        </div>
-        <div class="font-actions">
-            <button class="btn" id="fontResetBtn">重置</button>
-            <button class="btn" id="fontCloseBtn">关闭</button>
-        </div>
-    </div>
+<div class="overlay" id="overlay"></div>
 
-    <!-- 遮罩层 -->
-    <div class="overlay" id="overlay"></div>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+<script>
+    let book;
+    let rendition;
+    let currentLocation;
+    let bookSpine = [];
 
-    <!-- 引入必要的库 -->
-    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
-    <script>
-        let book;
-        let rendition;
-        let currentLocation;
-        let currentFontSize = 100; // 默认字体大小百分比
+    document.addEventListener('DOMContentLoaded', initReader);
 
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', initReader);
+    async function initReader() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const epubFile = params.get('file');
+            const bookTitle = params.get('title') || '书籍';
 
-        async function initReader() {
-            try {
-                // 获取URL参数中的文件路径
-                const params = new URLSearchParams(window.location.search);
-                const epubFile = params.get('file');
-                const bookTitle = params.get('title') || '未知图书';
+            if (!epubFile) throw new Error('未指定EPUB文件');
 
-                if (!epubFile) {
-                    throw new Error('未指定EPUB文件，请从图书列表页面打开');
-                }
-
-                // 设置页面标题
-                document.getElementById('bookTitle').textContent = bookTitle;
-
-                // 初始化EPUB阅读器（使用JSZip优化）
-                await loadEpubBookWithJSZip(epubFile);
-                
-                // 隐藏加载状态
-                document.getElementById('loading').style.display = 'none';
-                
-                // 绑定控制按钮事件
-                bindControls();
-                
-            } catch (error) {
-                console.error('阅读器初始化失败:', error);
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('error').innerHTML = `
-                    <h3>加载失败</h3>
-                    <p>${error.message}</p>
-                    <p style="margin-top: 1rem; font-size: 0.9rem;">
-                        可能的原因：<br>
-                        1. 文件路径错误或文件不存在<br>
-                        2. 跨域访问限制（请部署到Web服务器）<br>
-                        3. EPUB文件格式不兼容
-                    </p>
-                `;
-            }
+            document.getElementById('bookTitle').textContent = bookTitle;
+            await loadEpub(epubFile);
+            document.getElementById('loading').style.display = 'none';
+            bindControls();
+            applyDarkMode();
+        } catch (err) {
+            console.error(err);
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').innerText = '加载失败：' + err.message;
+            document.getElementById('error').style.display = 'block';
         }
+    }
 
-        // 使用JSZip优化加载EPUB图书
-        async function loadEpubBookWithJSZip(filePath) {
-            try {
-                // 方案1：尝试直接使用epubjs加载（优化配置）
-                book = ePub(filePath, {
-                    // 配置项优化
-                    preserveWhitespace: true,
-                    restoreSpaces: true,
-                    replaceHyphens: true
-                });
+    async function loadEpub(path) {
+        try {
+            book = ePub(path, { preserveWhitespace: true });
+            book.loaded.spine.then(s => bookSpine = s);
+            await book.ready;
 
-                // 监听加载进度
-                book.loaded.navigation.then(() => {
-                    console.log('导航数据加载完成');
-                });
-
-                book.loaded.spine.then(() => {
-                    console.log('书脊数据加载完成');
-                });
-
-                // 等待书籍加载完成
-                await book.ready;
-                
-                // 渲染书籍到页面
-                rendition = book.renderTo("viewer", {
-                    width: "100%",
-                    height: "100%",
-                    flow: "paginated", // 分页模式
-                    manager: "continuous", // 连续滚动
-                    spreads: "auto", // 自动处理双页
-                    width: window.innerWidth,
-                    height: window.innerHeight - 70
-                });
-
-                // 设置初始字体大小
-                rendition.themes.fontSize(`${currentFontSize}%`);
-
-                // 获取目录 - 增加空值处理
-                const toc = await book.toc || [];
-                renderToc(toc);
-
-                // 开始阅读
-                await rendition.display();
-                
-                // 监听位置变化
-                rendition.on("locationChanged", (location) => {
-                    currentLocation = location;
-                    updateActiveTocItem(location);
-                });
-
-                // 监听渲染完成
-                rendition.on("rendered", () => {
-                    console.log('书籍渲染完成');
-                });
-
-            } catch (directError) {
-                console.warn('直接加载失败，尝试使用JSZip加载:', directError);
-                
-                // 方案2：使用JSZip手动加载
-                // 下载EPUB文件
-                const response = await fetch(filePath);
-                if (!response.ok) {
-                    throw new Error(`无法下载EPUB文件: ${response.status} ${response.statusText}`);
-                }
-                
-                // 读取为ArrayBuffer
-                const arrayBuffer = await response.arrayBuffer();
-                
-                // 使用JSZip加载
-                book = ePub(arrayBuffer, {
-                    type: 'binary',
-                    preserveWhitespace: true,
-                    restoreSpaces: true
-                });
-                
-                // 等待书籍加载完成
-                await book.ready;
-                
-                // 渲染书籍到页面
-                rendition = book.renderTo("viewer", {
-                    width: "100%",
-                    height: "100%",
-                    flow: "paginated",
-                    manager: "continuous",
-                    spreads: "auto"
-                });
-
-                // 设置初始字体大小
-                rendition.themes.fontSize(`${currentFontSize}%`);
-
-                // 获取目录 - 增加空值处理
-                const toc = await book.toc || [];
-                renderToc(toc);
-
-                // 开始阅读
-                await rendition.display();
-                
-                // 监听位置变化
-                rendition.on("locationChanged", (location) => {
-                    currentLocation = location;
-                    updateActiveTocItem(location);
-                });
-            }
-        }
-
-        // 渲染目录 - 核心修复：增加严格的空值检查
-        function renderToc(toc) {
-            const tocList = document.getElementById('tocList');
-            tocList.innerHTML = '';
-
-            // 严格检查toc是否为数组，不是则转为空数组
-            const tocArray = Array.isArray(toc) ? toc : [];
-            
-            // 过滤掉无效的目录项
-            const validTocItems = tocArray.filter(item => item && item.href && item.label);
-            
-            if (validTocItems.length === 0) {
-                tocList.innerHTML = '<li class="toc-item"><a href="javascript:void(0)">暂无目录</a></li>';
-                return;
-            }
-
-            // 递归渲染目录项 - 增加空值检查
-            function renderTocItems(items, parentElement, depth = 0) {
-                // 确保items是数组，避免undefined
-                const itemsArray = Array.isArray(items) ? items : [];
-                
-                itemsArray.forEach(item => {
-                    // 跳过空的或无效的目录项
-                    if (!item || !item.href || !item.label) return;
-                    
-                    const li = document.createElement('li');
-                    li.className = 'toc-item';
-                    li.style.paddingLeft = `${depth * 15}px`;
-                    
-                    const a = document.createElement('a');
-                    a.href = '#';
-                    a.textContent = item.label.trim();
-                    a.dataset.href = item.href;
-                    
-                    a.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        try {
-                            rendition.display(item.href);
-                        } catch (error) {
-                            console.warn('跳转到目录失败:', error);
-                            // 尝试使用CFI定位
-                            if (item.cfi) {
-                                rendition.display(item.cfi);
-                            }
-                        }
-                        // 关闭目录面板
-                        document.getElementById('tocPanel').classList.remove('show');
-                    });
-                    
-                    li.appendChild(a);
-                    parentElement.appendChild(li);
-                    
-                    // 递归渲染子目录 - 增加空值检查
-                    renderTocItems(item.subitems, parentElement, depth + 1);
-                });
-            }
-
-            renderTocItems(validTocItems, tocList);
-        }
-
-        // 更新当前激活的目录项 - 增加空值检查
-        function updateActiveTocItem(location) {
-            // 增加空值检查
-            if (!location || !location.start || !location.start.href) return;
-            
-            const tocItems = document.querySelectorAll('.toc-item');
-            tocItems.forEach(item => item.classList.remove('active'));
-            
-            // 简单匹配，找到对应的目录项
-            const path = location.start.href;
-            if (path) {
-                // 处理不同的路径格式
-                const pathVariations = [
-                    path,
-                    path.split('#')[0],
-                    path.replace(/^.*\//, '')
-                ];
-                
-                for (const variant of pathVariations) {
-                    const activeItem = document.querySelector(`.toc-item a[data-href="${variant}"]`);
-                    if (activeItem) {
-                        activeItem.closest('.toc-item').classList.add('active');
-                        break;
-                    }
-                }
-            }
-        }
-
-        // 绑定控制按钮事件
-        function bindControls() {
-            // 上一页/下一页
-            document.getElementById('prevBtn').addEventListener('click', () => {
-                try {
-                    rendition.prev();
-                } catch (error) {
-                    console.warn('无法翻到上一页:', error);
-                }
+            rendition = book.renderTo("viewer", {
+                width: "100%",
+                height: "100%",
+                flow: "paginated",
+                spreads: false
             });
-            
-            document.getElementById('nextBtn').addEventListener('click', () => {
-                try {
-                    rendition.next();
-                } catch (error) {
-                    console.warn('无法翻到下一页:', error);
-                }
+
+            rendition.themes.register("dark", {
+                "body": { background: "#121212", color: "#e0e0e0" },
+                "p": { color: "#e0e0e0" },
+                "h1,h2,h3,h4,h5,h6": { color: "#fff" }
             });
-            
-            // 目录按钮
-            document.getElementById('tocBtn').addEventListener('click', () => {
-                const tocPanel = document.getElementById('tocPanel');
-                const overlay = document.getElementById('overlay');
-                
-                tocPanel.classList.toggle('show');
-                overlay.classList.toggle('show');
-                
-                // 点击遮罩层关闭
-                overlay.onclick = () => {
-                    tocPanel.classList.remove('show');
-                    document.getElementById('fontPanel').classList.remove('show');
-                    overlay.classList.remove('show');
+            rendition.themes.select("dark");
+
+            await extractAndRenderToc();
+            await rendition.display();
+
+            rendition.on("locationChanged", loc => {
+                currentLocation = loc;
+                updateActiveToc(loc);
+            });
+
+        } catch (e) {
+            const ab = await fetch(path).then(r => r.arrayBuffer());
+            book = ePub(ab, { type: "binary" });
+            await book.ready;
+            bookSpine = book.spine.items || [];
+
+            rendition = book.renderTo("viewer", { width: "100%", height: "100%", flow: "paginated" });
+            rendition.themes.register("dark", {
+                "body": { background: "#121212", color: "#e0e0e0" },
+                "p": { color: "#e0e0e0" }
+            });
+            rendition.themes.select("dark");
+
+            await extractAndRenderToc();
+            await rendition.display();
+
+            rendition.on("locationChanged", loc => {
+                currentLocation = loc;
+                updateActiveToc(loc);
+            });
+        }
+    }
+
+    async function extractAndRenderToc() {
+        let toc = [];
+        try {
+            toc = await book.toc || [];
+            if (!toc.length && book.navigation) toc = book.navigation.toc || [];
+            if (!toc.length) toc = generateTocFromSpine(bookSpine);
+        } catch (e) {
+            toc = generateTocFromSpine(bookSpine);
+        }
+        renderToc(toc);
+    }
+
+    function generateTocFromSpine(spine) {
+        return spine.map((it, i) => ({
+            label: `章节 ${i+1}`,
+            href: it.href || it.id,
+            cfi: it.cfi
+        }));
+    }
+
+    function renderToc(toc) {
+        const ul = document.getElementById('tocList');
+        ul.innerHTML = '';
+        if (!toc.length) {
+            ul.innerHTML = '<li class="toc-item"><a>No content</a></li>';
+            return;
+        }
+
+        function render(items, parent, depth = 0) {
+            items.forEach(it => {
+                if (!it.href && !it.cfi) return;
+                const li = document.createElement('li');
+                li.className = 'toc-item';
+                li.style.paddingLeft = depth * 12 + 'px';
+                const a = document.createElement('a');
+                a.textContent = it.label || '章节';
+                a.onclick = async e => {
+                    e.preventDefault();
+                    try {
+                        if (it.cfi) await rendition.display(it.cfi);
+                        else await rendition.display(it.href);
+                    } catch {}
+                    document.getElementById('tocPanel').classList.remove('show');
+                    document.getElementById('overlay').classList.remove('show');
                 };
-            });
-            
-            // 字体大小控制
-            document.getElementById('fontSizeBtn').addEventListener('click', () => {
-                document.getElementById('fontPanel').classList.add('show');
-                document.getElementById('overlay').classList.add('show');
-                document.getElementById('fontSizeDisplay').textContent = `${currentFontSize}%`;
-            });
-            
-            // 字体大小调整按钮
-            document.getElementById('fontSmallerBtn').addEventListener('click', () => {
-                if (currentFontSize > 60) {
-                    currentFontSize -= 10;
-                    updateFontSize();
-                }
-            });
-            
-            document.getElementById('fontLargerBtn').addEventListener('click', () => {
-                if (currentFontSize < 200) {
-                    currentFontSize += 10;
-                    updateFontSize();
-                }
-            });
-            
-            document.getElementById('fontResetBtn').addEventListener('click', () => {
-                currentFontSize = 100;
-                updateFontSize();
-            });
-            
-            document.getElementById('fontCloseBtn').addEventListener('click', () => {
-                document.getElementById('fontPanel').classList.remove('show');
-                document.getElementById('overlay').classList.remove('show');
-            });
-            
-            // 键盘导航
-            document.addEventListener('keydown', (e) => {
-                // 忽略输入框等焦点元素
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-                
-                switch(e.key) {
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        rendition.prev();
-                        break;
-                    case 'ArrowRight':
-                        e.preventDefault();
-                        rendition.next();
-                        break;
-                    case 'Escape':
-                        document.getElementById('tocPanel').classList.remove('show');
-                        document.getElementById('fontPanel').classList.remove('show');
-                        document.getElementById('overlay').classList.remove('show');
-                        break;
-                    case '+':
-                    case '=':
-                        if (e.shiftKey && currentFontSize < 200) {
-                            currentFontSize += 10;
-                            updateFontSize();
-                        }
-                        break;
-                    case '-':
-                        if (currentFontSize > 60) {
-                            currentFontSize -= 10;
-                            updateFontSize();
-                        }
-                        break;
-                }
-            });
-            
-            // 窗口大小调整
-            window.addEventListener('resize', () => {
-                if (rendition) {
-                    rendition.resize(window.innerWidth, window.innerHeight - 70);
+                li.appendChild(a);
+                parent.appendChild(li);
+                if (it.subitems && it.subitems.length) {
+                    render(it.subitems, parent, depth + 1);
                 }
             });
         }
 
-        // 更新字体大小
-        function updateFontSize() {
-            if (rendition) {
-                // 更新显示
-                document.getElementById('fontSizeDisplay').textContent = `${currentFontSize}%`;
-                
-                // 应用到所有视图
-                const views = rendition.views();
-                views.forEach(view => {
-                    view.setFontSize(currentFontSize);
-                });
-                
-                // 也可以使用themes方式
-                rendition.themes.fontSize(`${currentFontSize}%`);
-            }
-        }
+        render(toc, ul);
+    }
 
-        // 页面关闭时清理资源
-        window.addEventListener('beforeunload', () => {
-            if (rendition) {
-                rendition.destroy();
+    function updateActiveToc(loc) {
+        if (!loc || !loc.start) return;
+        const all = document.querySelectorAll('.toc-item');
+        all.forEach(i => i.classList.remove('active'));
+        const cur = loc.start.href || '';
+        all.forEach(it => {
+            const a = it.querySelector('a');
+            if (cur.includes(a.textContent)) {
+                it.classList.add('active');
             }
         });
-    </script>
+    }
+
+    function applyDarkMode() {
+        setTimeout(() => {
+            const ifs = document.querySelectorAll('#viewer iframe');
+            ifs.forEach(ifr => {
+                try {
+                    const b = ifr.contentDocument.body;
+                    b.style.background = '#121212';
+                    b.style.color = '#e0e0e0';
+                } catch {}
+            });
+        }, 500);
+    }
+
+    function bindControls() {
+        document.getElementById('prevBtn').onclick = () => {
+            rendition.prev();
+            applyDarkMode();
+        };
+
+        document.getElementById('nextBtn').onclick = () => {
+            rendition.next();
+            applyDarkMode();
+        };
+
+        document.getElementById('tocBtn').onclick = () => {
+            document.getElementById('tocPanel').classList.toggle('show');
+            document.getElementById('overlay').classList.toggle('show');
+        };
+
+        document.getElementById('overlay').onclick = () => {
+            document.getElementById('tocPanel').classList.remove('show');
+            document.getElementById('overlay').classList.remove('show');
+        };
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') {
+                rendition.prev();
+                applyDarkMode();
+            }
+            if (e.key === 'ArrowRight') {
+                rendition.next();
+                applyDarkMode();
+            }
+            if (e.key === 'Escape') {
+                document.getElementById('tocPanel').classList.remove('show');
+                document.getElementById('overlay').classList.remove('show');
+            }
+        });
+    }
+</script>
 </body>
 </html>
